@@ -12,10 +12,10 @@ public class PlayerBullet : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         EnemyAi rangedEnemy =
-            other.GetComponent<EnemyAi>();
+            other.GetComponentInParent<EnemyAi>();
 
         MeleeEnemyAI meleeEnemy =
-            other.GetComponent<MeleeEnemyAI>();
+            other.GetComponentInParent<MeleeEnemyAI>();
 
         if (rangedEnemy != null)
         {
