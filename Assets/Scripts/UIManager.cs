@@ -6,7 +6,6 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     [Header("Panels")]
-    public GameObject startMenuPanel;
     public GameObject gameOverPanel;
 
     private void Awake()
@@ -24,25 +23,13 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        // Show start menu first
-        startMenuPanel.SetActive(true);
+        // Hide game over panel
         gameOverPanel.SetActive(false);
 
-        // Pause game
-        Time.timeScale = 0f;
-
-        // Unlock mouse
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    // START GAME
-    public void StartGame()
-    {
-        startMenuPanel.SetActive(false);
-
+        // Ensure game is running
         Time.timeScale = 1f;
 
+        // Lock cursor for gameplay
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -63,7 +50,9 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().buildIndex
+        );
     }
 
     // QUIT GAME
