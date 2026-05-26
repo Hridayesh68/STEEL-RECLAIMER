@@ -3,7 +3,10 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
+
     public int currentHealth;
+
+    private bool isDead = false;
 
     private void Start()
     {
@@ -14,23 +17,45 @@ public class PlayerHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        // Prevent extra damage after death
+        if (isDead)
+            return;
+
         currentHealth -= damage;
 
         Debug.Log("Player Took Damage: " + damage);
         Debug.Log("Current Health: " + currentHealth);
 
+        // Clamp health
         if (currentHealth <= 0)
         {
+            currentHealth = 0;
+
             Die();
         }
     }
 
-    void Die()
-{
-    Debug.Log("Player Died");
+    private void Die()
+    {
+        // Prevent multiple deaths
+        if (isDead)
+            return;
 
-    UIManager.Instance.GameOver();
+        isDead = true;
 
-    gameObject.SetActive(false);
-}
+        Debug.Log("PLAYER DIED");
+
+        // Disable player controls
+        gameObject.SetActive(false);
+
+        // Show game over UI
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.GameOver();
+        }
+        else
+        {
+            Debug.LogError("UIManager Instance Missing!");
+        }
+    }
 }

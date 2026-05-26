@@ -36,24 +36,24 @@ public class UIManager : MonoBehaviour
 
     // GAME OVER
     public void GameOver()
-    {
-        gameOverPanel.SetActive(true);
+{
+    gameOverPanel.SetActive(true);
 
-        Time.timeScale = 0f;
-
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
+    Cursor.lockState = CursorLockMode.None;
+    Cursor.visible = true;
+}
 
     // RESTART GAME
-    public void RestartGame()
-    {
-        Time.timeScale = 1f;
+   public void RestartGame()
+{
+    Debug.Log("BUTTON CLICKED");
 
-        SceneManager.LoadScene(
-            SceneManager.GetActiveScene().buildIndex
-        );
-    }
+    Time.timeScale = 1f;
+
+    SceneManager.LoadScene(
+        SceneManager.GetActiveScene().buildIndex
+    );
+}
 
     // QUIT GAME
     public void QuitGame()
