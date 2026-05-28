@@ -7,26 +7,70 @@ public class PlayerBullet : MonoBehaviour
     private void Start()
     {
         Destroy(gameObject, 3f);
+
+        IgnorePlayerCollision();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void IgnorePlayerCollision()
     {
-        EnemyAi rangedEnemy =
-            other.GetComponentInParent<EnemyAi>();
+        Collider bulletCollider = GetComponent<Collider>();
 
-        MeleeEnemyAI meleeEnemy =
-            other.GetComponentInParent<MeleeEnemyAI>();
+        GameObject player =
+            GameObject.FindGameObjectWithTag("Player");
 
-        if (rangedEnemy != null)
+        if (player == null) return;
+
+        Collider[] playerColliders =
+            player.GetComponentsInChildren<Collider>();
+
+        foreach (Collider col in playerColliders)
         {
-            rangedEnemy.TakeDamage(damage);
+            Physics.IgnoreCollision(
+                bulletCollider,
+                col
+            );
         }
+    }
 
-        if (meleeEnemy != null)
-        {
-            meleeEnemy.TakeDamage(damage);
-        }
+   private void OnTriggerEnter(Collider other)
+{
+    Debug.Log("Bullet hit: " + other.name);
+
+    // Ignore triggers
+    if (other.isTrigger)
+        return;
+
+    // Ignore player
+    if (other.CompareTag("Player"))
+        return;
+
+    // Ignore weapon
+    if (other.CompareTag("Weapon"))
+        return;
+
+    EnemyAi rangedEnemy =
+        other.GetComponentInParent<EnemyAi>();
+
+    if (rangedEnemy != null)
+    {
+        rangedEnemy.TakeDamage(damage);
 
         Destroy(gameObject);
+        return;
     }
+
+    MeleeEnemyAI meleeEnemy =
+        other.GetComponentInParent<MeleeEnemyAI>();
+
+    if (meleeEnemy != null)
+    {
+        meleeEnemy.TakeDamage(damage);
+
+        Destroy(gameObject);
+        return;
+    }
+
+    // Destroy on environment hit
+    Destroy(gameObject);
+}
 }
