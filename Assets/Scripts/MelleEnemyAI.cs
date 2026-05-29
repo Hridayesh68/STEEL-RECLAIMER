@@ -7,27 +7,28 @@ public class MeleeEnemyAI : MonoBehaviour
 
     public Transform player;
 
-    public LayerMask whatIsGround, whatIsPlayer;
+    public LayerMask whatIsGround;
+    public LayerMask whatIsPlayer;
 
     [Header("Health")]
     public float health = 100f;
 
     [Header("Patrolling")]
     public Vector3 walkPoint;
-    bool walkPointSet;
+    private bool walkPointSet;
     public float walkPointRange = 10f;
 
-    [Header("Attacking")]
-    public float timeBetweenAttacks = 1.5f;
-    bool alreadyAttacked;
+    [Header("Attack")]
     public int attackDamage = 20;
+    public float timeBetweenAttacks = 1.5f;
+    private bool alreadyAttacked;
 
     [Header("Ranges")]
     public float sightRange = 15f;
     public float attackRange = 2.5f;
 
-    public bool playerInSightRange;
-    public bool playerInAttackRange;
+    private bool playerInSightRange;
+    private bool playerInAttackRange;
 
     private void Awake()
     {
@@ -43,16 +44,21 @@ public class MeleeEnemyAI : MonoBehaviour
 
     private void Update()
     {
-        if (player == null) return;
+        if (player == null)
+            return;
 
-        // Detect player
         playerInSightRange =
-            Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+            Physics.CheckSphere(
+                transform.position,
+                sightRange,
+                whatIsPlayer);
 
         playerInAttackRange =
-            Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+            Physics.CheckSphere(
+                transform.position,
+                attackRange,
+                whatIsPlayer);
 
-        // State machine
         if (!playerInSightRange && !playerInAttackRange)
         {
             Patroling();
@@ -61,7 +67,7 @@ public class MeleeEnemyAI : MonoBehaviour
         {
             ChasePlayer();
         }
-        else if (playerInAttackRange && playerInSightRange)
+        else if (playerInSightRange && playerInAttackRange)
         {
             AttackPlayer();
         }
@@ -79,7 +85,8 @@ public class MeleeEnemyAI : MonoBehaviour
             agent.SetDestination(walkPoint);
         }
 
-        Vector3 distanceToWalkPoint = transform.position - walkPoint;
+        Vector3 distanceToWalkPoint =
+            transform.position - walkPoint;
 
         if (distanceToWalkPoint.magnitude < 1f)
         {
@@ -101,7 +108,11 @@ public class MeleeEnemyAI : MonoBehaviour
             transform.position.z + randomZ
         );
 
-        if (Physics.Raycast(walkPoint, Vector3.down, 2f, whatIsGround))
+        if (Physics.Raycast(
+            walkPoint,
+            Vector3.down,
+            2f,
+            whatIsGround))
         {
             walkPointSet = true;
         }
@@ -114,26 +125,29 @@ public class MeleeEnemyAI : MonoBehaviour
 
     private void AttackPlayer()
     {
-        // Stop moving when attacking
+        // Stop moving while attacking
         agent.SetDestination(transform.position);
 
-        // Look at player
-        transform.LookAt(player);
+        // Face the player
+        Vector3 lookPos = player.position;
+        lookPos.y = transform.position.y;
+        transform.LookAt(lookPos);
 
         if (!alreadyAttacked)
         {
-            // DAMAGE PLAYER
             PlayerHealth playerHealth =
                 player.GetComponent<PlayerHealth>();
 
             if (playerHealth != null)
             {
+                Debug.Log("Enemy attacked player for " + attackDamage + " damage");
                 playerHealth.TakeDamage(attackDamage);
             }
 
             alreadyAttacked = true;
 
-            Invoke(nameof(ResetAttack), timeBetweenAttacks);
+            Invoke(nameof(ResetAttack),
+                   timeBetweenAttacks);
         }
     }
 
@@ -160,9 +174,13 @@ public class MeleeEnemyAI : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(
+            transform.position,
+            attackRange);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
+        Gizmos.DrawWireSphere(
+            transform.position,
+            sightRange);
     }
 }
