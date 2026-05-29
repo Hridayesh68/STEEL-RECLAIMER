@@ -3,20 +3,13 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public string gameSceneName = "GameScene";
-
-    public void PlayGame()
+    public void StartGame()
     {
-        Time.timeScale = 1f;
- Debug.Log("start game clicked");
-        SceneManager.LoadScene(gameSceneName);
-
+        SceneManager.LoadScene("GameScene");
     }
 
     public void QuitGame()
     {
         Application.Quit();
-
-        Debug.Log("Quit Game");
     }
 }
