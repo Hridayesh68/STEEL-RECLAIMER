@@ -7,6 +7,7 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
+    public float deathHeight = -10f;
     [Header("UI")]
     public Slider healthBar;
 
@@ -37,6 +38,10 @@ public class EnemyHealth : MonoBehaviour
         Debug.Log("Enemy Health: " + currentHealth);
 
         if (currentHealth <= 0)
+        {
+            Die();
+        }
+         if (transform.position.y < deathHeight)
         {
             Die();
         }

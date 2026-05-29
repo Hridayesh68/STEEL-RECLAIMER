@@ -7,8 +7,13 @@ public class PlayerHealth : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
+    [Header("Fall Death")]
+    public float deathHeight = -10f;
+
     [Header("UI")]
     public Slider healthSlider;
+
+    private bool isDead = false;
 
     private void Start()
     {
@@ -23,17 +28,27 @@ public class PlayerHealth : MonoBehaviour
         Debug.Log("Player Spawned With Health: " + currentHealth);
     }
 
+    private void Update()
+    {
+        // Kill player if they fall below the map
+        if (!isDead && transform.position.y < deathHeight)
+        {
+            Debug.Log("Player Fell Into Void");
+            Die();
+        }
+    }
+
     public void TakeDamage(int damage)
     {
+        if (isDead)
+            return;
+
         currentHealth -= damage;
 
         if (currentHealth < 0)
             currentHealth = 0;
 
-        if (healthSlider != null)
-        {
-            healthSlider.value = currentHealth;
-        }
+        UpdateHealthUI();
 
         Debug.Log("Player Took Damage: " + damage);
         Debug.Log("Current Health: " + currentHealth);
@@ -46,19 +61,32 @@ public class PlayerHealth : MonoBehaviour
 
     public void Heal(int amount)
     {
+        if (isDead)
+            return;
+
         currentHealth += amount;
 
         if (currentHealth > maxHealth)
             currentHealth = maxHealth;
 
+        UpdateHealthUI();
+    }
+
+    private void UpdateHealthUI()
+    {
         if (healthSlider != null)
         {
             healthSlider.value = currentHealth;
         }
     }
 
-    void Die()
+    private void Die()
     {
+        if (isDead)
+            return;
+
+        isDead = true;
+
         Debug.Log("Player Died");
 
         if (UIManager.Instance != null)
