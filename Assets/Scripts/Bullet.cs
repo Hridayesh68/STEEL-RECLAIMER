@@ -10,19 +10,19 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject, lifeTime);
     }
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     Debug.Log("Hit: " + other.name);
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Hit: " + other.name);
 
-    //     PlayerHealth player =
-    //         other.GetComponentInParent<PlayerHealth>();
+        PlayerHealth player =
+            other.GetComponentInParent<PlayerHealth>();
 
-    // Debug.Log(player);
-    //     if (player != null)
-    //     {
-    //         player.TakeDamage(damage);
-    //     }
+    Debug.Log(player);
+        if (player != null)
+        {
+            player.TakeDamage(damage);
+        }
 
-    //     Destroy(gameObject);
-    // }
+        Destroy(gameObject);
+    }
 }

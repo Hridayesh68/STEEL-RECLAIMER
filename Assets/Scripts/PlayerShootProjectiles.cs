@@ -5,7 +5,7 @@ public class PlayerShootProjectiles : MonoBehaviour
     [SerializeField] private GameObject pfBullet;
     [SerializeField] private CharacterAim_Base characterAim;
 
-    [SerializeField] private float bulletSpeed = 25f;
+    [SerializeField] private float bulletSpeed = 40f;
 
     private void Awake()
     {
@@ -37,25 +37,38 @@ public class PlayerShootProjectiles : MonoBehaviour
             return;
         }
 
-        // Spawn bullet
         GameObject bullet = Instantiate(
             pfBullet,
             e.gunEndPointPosition,
             Quaternion.LookRotation(e.shootDirection)
         );
 
-        // Get rigidbody
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
 
         if (rb != null)
         {
-            // Shoot bullet
             rb.linearVelocity =
-                e.shootDirection.normalized * bulletSpeed;
+                e.shootDirection * bulletSpeed;
         }
         else
         {
             Debug.LogError("Bullet prefab missing Rigidbody!");
+        }
+
+        // Ignore collision with player
+        Collider bulletCollider =
+            bullet.GetComponent<Collider>();
+
+        Collider playerCollider =
+            GetComponentInParent<Collider>();
+
+        if (bulletCollider != null &&
+            playerCollider != null)
+        {
+            Physics.IgnoreCollision(
+                bulletCollider,
+                playerCollider
+            );
         }
     }
 }

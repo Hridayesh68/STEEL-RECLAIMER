@@ -11,22 +11,19 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        EnemyAi rangedEnemy =
-            other.GetComponent<EnemyAi>();
+        if (other.CompareTag("Player"))
+            return;
 
-        MeleeEnemyAI meleeEnemy =
-            other.GetComponent<MeleeEnemyAI>();
+        Debug.Log("Bullet hit: " + other.name);
 
-        if (rangedEnemy != null)
+        EnemyHealth enemyHealth =
+            other.GetComponentInParent<EnemyHealth>();
+
+        if (enemyHealth != null)
         {
-            rangedEnemy.TakeDamage(damage);
-        }
+            enemyHealth.TakeDamage(damage);
 
-        if (meleeEnemy != null)
-        {
-            meleeEnemy.TakeDamage(damage);
+            Destroy(gameObject);
         }
-
-        Destroy(gameObject);
     }
 }

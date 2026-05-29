@@ -10,9 +10,6 @@ public class MeleeEnemyAI : MonoBehaviour
     public LayerMask whatIsGround;
     public LayerMask whatIsPlayer;
 
-    [Header("Health")]
-    public float health = 100f;
-
     [Header("Patrolling")]
     public Vector3 walkPoint;
     private bool walkPointSet;
@@ -125,12 +122,11 @@ public class MeleeEnemyAI : MonoBehaviour
 
     private void AttackPlayer()
     {
-        // Stop moving while attacking
         agent.SetDestination(transform.position);
 
-        // Face the player
         Vector3 lookPos = player.position;
         lookPos.y = transform.position.y;
+
         transform.LookAt(lookPos);
 
         if (!alreadyAttacked)
@@ -140,7 +136,6 @@ public class MeleeEnemyAI : MonoBehaviour
 
             if (playerHealth != null)
             {
-                Debug.Log("Enemy attacked player for " + attackDamage + " damage");
                 playerHealth.TakeDamage(attackDamage);
             }
 
@@ -154,21 +149,6 @@ public class MeleeEnemyAI : MonoBehaviour
     private void ResetAttack()
     {
         alreadyAttacked = false;
-    }
-
-    public void TakeDamage(int damage)
-    {
-        health -= damage;
-
-        if (health <= 0)
-        {
-            Invoke(nameof(DestroyEnemy), 0.5f);
-        }
-    }
-
-    private void DestroyEnemy()
-    {
-        Destroy(gameObject);
     }
 
     private void OnDrawGizmosSelected()

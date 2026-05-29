@@ -34,6 +34,7 @@ public class EnemyHealth : MonoBehaviour
         }
 
         Debug.Log(gameObject.name + " took " + damage + " damage");
+        Debug.Log("Enemy Health: " + currentHealth);
 
         if (currentHealth <= 0)
         {
@@ -41,7 +42,7 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    void Die()
+    private void Die()
     {
         Debug.Log(gameObject.name + " Died");
 
