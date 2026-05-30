@@ -6,7 +6,8 @@ public class EnemyHealth : MonoBehaviour
     [Header("Health")]
     public int maxHealth = 100;
     public int currentHealth;
-
+public int scoreValue = 10;
+private bool isDead = false;
     public float deathHeight = -10f;
     [Header("UI")]
     public Slider healthBar;
@@ -47,10 +48,22 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    private void Die()
-    {
-        Debug.Log(gameObject.name + " Died");
+   private void Die()
+{
+    if (isDead) return;
+    isDead = true;
 
-        Destroy(gameObject);
+    Debug.Log(gameObject.name + " Died");
+
+    if (ScoreManager.instance != null)
+    {
+        ScoreManager.instance.AddScore(scoreValue);
     }
+    else
+    {
+        Debug.LogError("ScoreManager instance not found!");
+    }
+
+    Destroy(gameObject);
+}
 }
