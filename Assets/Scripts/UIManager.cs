@@ -6,12 +6,14 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     [Header("Panels")]
-    public GameObject startMenuPanel;
     public GameObject gameOverPanel;
+
+    [Header("Gameplay UI")]
+    public GameObject MiniMap;
+    public GameObject PlayerHealth;
 
     private void Awake()
     {
-        // Singleton
         if (Instance == null)
         {
             Instance = this;
@@ -24,22 +26,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        // Show start menu first
-        startMenuPanel.SetActive(true);
-        gameOverPanel.SetActive(false);
-
-        // Pause game
-        Time.timeScale = 0f;
-
-        // Unlock mouse
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-    }
-
-    // START GAME
-    public void StartGame()
-    {
-        startMenuPanel.SetActive(false);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(false);
 
         Time.timeScale = 1f;
 
@@ -50,7 +38,15 @@ public class UIManager : MonoBehaviour
     // GAME OVER
     public void GameOver()
     {
-        gameOverPanel.SetActive(true);
+        if (gameOverPanel != null)
+            gameOverPanel.SetActive(true);
+
+        // Hide gameplay UI
+        if (MiniMap != null)
+            MiniMap.SetActive(false);
+
+        if (PlayerHealth != null)
+            PlayerHealth.SetActive(false);
 
         Time.timeScale = 0f;
 
@@ -62,7 +58,6 @@ public class UIManager : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
-
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -70,7 +65,6 @@ public class UIManager : MonoBehaviour
     public void QuitGame()
     {
         Debug.Log("Quit Game");
-
         Application.Quit();
     }
 }
