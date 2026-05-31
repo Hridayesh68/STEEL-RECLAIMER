@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using StarterAssets;
 using UnityEngine.Animations.Rigging;
 using Unity.Cinemachine;
@@ -50,65 +51,67 @@ public class WeaponHandler : MonoBehaviour
         defaultCameraDistance = cm_camera.CameraDistance;
     }
 
-    private void Update()
+  private void Update()
+{
+    // INPUT SYSTEM
+    Aiming = Mouse.current != null &&
+             Mouse.current.rightButton.isPressed;
+
+    bool shootInp = Mouse.current != null &&
+                    Mouse.current.leftButton.isPressed;
+
+    // ANIMATIONS
+    anim.SetBool("Aiming", Aiming);
+
+    if (controller != null)
+        controller.strafe = Aiming;
+
+    // CAMERA
+    float targetVerticalArmLength =
+        Aiming ? aimVerticalArmLength : defaultVerticalArmLength;
+
+    float targetSide =
+        Aiming ? aimCameraSide : defaultCameraSide;
+
+    float targetDistance =
+        Aiming ? aimCameraDistance : defaultCameraDistance;
+
+    cm_camera.VerticalArmLength = Mathf.Lerp(
+        cm_camera.VerticalArmLength,
+        targetVerticalArmLength,
+        cameraTransitionSpeed * Time.deltaTime);
+
+    cm_camera.CameraSide = Mathf.Lerp(
+        cm_camera.CameraSide,
+        targetSide,
+        cameraTransitionSpeed * Time.deltaTime);
+
+    cm_camera.CameraDistance = Mathf.Lerp(
+        cm_camera.CameraDistance,
+        targetDistance,
+        cameraTransitionSpeed * Time.deltaTime);
+
+    // CROSSHAIR
+    if (crosshair != null)
+        crosshair.SetActive(Aiming);
+
+    // AIM IK
+    if (aimIk != null)
     {
-        // INPUT
-        Aiming = Input.GetButton("Fire2");
-        bool shootInp = Input.GetButton("Fire1");
+        float targetWeight = Aiming ? 1f : 0f;
 
-        // ANIMATIONS
-        anim.SetBool("Aiming", Aiming);
-
-        if (controller != null)
-            controller.strafe = Aiming;
-
-        // CAMERA
-        float targetVerticalArmLength =
-            Aiming ? aimVerticalArmLength : defaultVerticalArmLength;
-
-        float targetSide =
-            Aiming ? aimCameraSide : defaultCameraSide;
-
-        float targetDistance =
-            Aiming ? aimCameraDistance : defaultCameraDistance;
-
-        cm_camera.VerticalArmLength = Mathf.Lerp(
-            cm_camera.VerticalArmLength,
-            targetVerticalArmLength,
-            cameraTransitionSpeed * Time.deltaTime);
-
-        cm_camera.CameraSide = Mathf.Lerp(
-            cm_camera.CameraSide,
-            targetSide,
-            cameraTransitionSpeed * Time.deltaTime);
-
-        cm_camera.CameraDistance = Mathf.Lerp(
-            cm_camera.CameraDistance,
-            targetDistance,
-            cameraTransitionSpeed * Time.deltaTime);
-
-        // CROSSHAIR
-        if (crosshair != null)
-            crosshair.SetActive(Aiming);
-
-        // AIM IK
-        if (aimIk != null)
-        {
-            float targetWeight = Aiming ? 1f : 0f;
-
-            aimIk.weight = Mathf.Lerp(
-                aimIk.weight,
-                targetWeight,
-                ikTransitionSpeed * Time.deltaTime);
-        }
-
-        // SHOOT
-        if (shootInp && Aiming)
-        {
-            Shoot();
-        }
+        aimIk.weight = Mathf.Lerp(
+            aimIk.weight,
+            targetWeight,
+            ikTransitionSpeed * Time.deltaTime);
     }
 
+    // SHOOT
+    if (shootInp && Aiming)
+    {
+        Shoot();
+    }
+}
     private void Shoot()
     {
         if (!canShoot)

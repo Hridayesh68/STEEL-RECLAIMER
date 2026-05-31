@@ -11,6 +11,7 @@
   <Project Path="Unity.Burst.csproj" />
   <Project Path="Unity.VisualScripting.Flow.Editor.csproj" />
   <Project Path="Unity.Animation.Rigging.csproj" />
+  <Project Path="Unity.Recorder.Editor.csproj" />
   <Project Path="Unity.VisualStudio.Editor.csproj" />
   <Project Path="Unity.InputSystem.csproj" />
   <Project Path="Unity.Animation.Rigging.Editor.csproj" />
@@ -29,6 +30,7 @@
   <Project Path="Unity.AI.Navigation.Updater.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Unity.AI.Navigation.Editor.csproj" />
+  <Project Path="Unity.Recorder.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Unity.InputSystem.ForUI.csproj" />
   <Project Path="Unity.AI.Navigation.csproj" />
@@ -39,8 +41,10 @@
   <Project Path="Unity.InputSystem.TestFramework.csproj" />
   <Project Path="Unity.StarterAssets.Editor.csproj" />
   <Project Path="Unity.VisualScripting.Shared.Editor.csproj" />
+  <Project Path="Unity.Recorder.Base.csproj" />
   <Project Path="Unity.StarterAssets.csproj" />
   <Project Path="Unity.CollabProxy.Editor.csproj" />
+  <Project Path="Unity.Bindings.OpenImageIO.Editor.csproj" />
   <Project Path="Unity.Animation.Rigging.DocCodeExamples.csproj" />
   <Project Path="Unity.InputSystem.DocCodeSamples.csproj" />
   <Project Path="Unity.VisualScripting.DocCodeExamples.csproj" />
