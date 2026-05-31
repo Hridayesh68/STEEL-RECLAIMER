@@ -13,6 +13,11 @@ public class PlayerHealth : MonoBehaviour
     [Header("UI")]
     public Slider healthSlider;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip damageSound;
+    public AudioClip deathSound;
+
     private bool isDead = false;
 
     private void Start()
@@ -30,7 +35,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-        // Kill player if they fall below the map
         if (!isDead && transform.position.y < deathHeight)
         {
             Debug.Log("Player Fell Into Void");
@@ -49,6 +53,12 @@ public class PlayerHealth : MonoBehaviour
             currentHealth = 0;
 
         UpdateHealthUI();
+
+        // Play damage sound
+        if (audioSource != null && damageSound != null)
+        {
+            audioSource.PlayOneShot(damageSound);
+        }
 
         Debug.Log("Player Took Damage: " + damage);
         Debug.Log("Current Health: " + currentHealth);
@@ -89,6 +99,25 @@ public class PlayerHealth : MonoBehaviour
 
         Debug.Log("Player Died");
 
+        // Play death sound
+        if (audioSource != null && deathSound != null)
+        {
+            audioSource.PlayOneShot(deathSound);
+        }
+
+        if (UIManager.Instance != null)
+        {
+            // Delay Game Over so sound can play
+            Invoke(nameof(ShowGameOver), 1f);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    private void ShowGameOver()
+    {
         if (UIManager.Instance != null)
         {
             UIManager.Instance.GameOver();
